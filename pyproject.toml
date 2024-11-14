@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "nerdfestexposanantonio-service"
+version = "0.1.0"
+description = "lamda function for rsvp"
+authors = ["Marc Streeter <mstreeter@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+supabase = "^2.10.0"
+pydantic = "^2.9.2"
+
+[tool.poetry.group.dev.dependencies]
+aws-lambda-typing = "^2.20.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

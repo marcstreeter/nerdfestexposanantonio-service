@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.zip
+.DS_Store
+src/lib/  # If using Lambda Layers instead of including dependencies directly
+.venv
