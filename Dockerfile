@@ -22,7 +22,7 @@ ENV _HANDLER=src.main.lambda_handler \
 RUN dnf install -y tar  # needed for tilt live_update feature
 
 # Copy dependencies from the builder stage to /var/task
-#   NOTE: lamda need this location to locate dependencies, this seems to differ
+#   NOTE: lambda need this location to locate dependencies, this seems to differ
 #         from the actual lambda that just allows for the dependencies to reside
 #         next to the main.py file but this way works
 COPY --from=builder /app/deps /opt/python/lib/python3.12/site-packages
