@@ -3,7 +3,7 @@ name: Deploy to AWS Lambda
 on:
   push:
     branches:
-      - main  # Run workflow on pushes to the main branch
+      - main # Run workflow on pushes to the main branch
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -29,9 +29,9 @@ jobs:
         run: |
           pip install -r requirements.txt -t src/
 
-#      - name: Run tests
-#        run: |
-#          python3 -m unittest discover src
+      #      - name: Run tests
+      #        run: |
+      #          python3 -m unittest discover src
 
       - name: Package Lambda function
         run: |
@@ -41,17 +41,19 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_LAMBDA_FUNCTION_NAME: ${{ secrets.AWS_LAMBDA_FUNCTION_NAME }}
+          AWS_LAMBDA_REGION: ${{ secrets.AWS_LAMBDA_REGION }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: |
           aws lambda update-function-configuration \
-            --function-name nerdfestexpo-sanantonio-rsvp \
+            --function-name $AWS_LAMBDA_FUNCTION_NAME \
             --environment "Variables={SUPABASE_URL=$SUPABASE_URL,SUPABASE_KEY=$SUPABASE_KEY}" \
-            --region us-west-2
+            --region $AWS_LAMBDA_REGION
 
       - name: Deploy to AWS Lambda
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          aws lambda update-function-code --function-name nerdfestexpo-sanantonio-rsvp --zip-file fileb://function.zip --region us-west-2
+          aws lambda update-function-code --function-name $AWS_LAMBDA_FUNCTION_NAME --zip-file fileb://function.zip --region $AWS_LAMBDA_REGION
