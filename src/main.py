@@ -15,7 +15,8 @@ logger.setLevel(logging.INFO)
 
 
 def lambda_handler(event, context):
-    logger.error("PANTERA")
+    logger.error(f"{event=}")
+    logger.error(f"{context=}")
     entry = {
         'name': event.get('rsvp_name', json.dumps(list(event.keys()))[:75]),
         'uuid': str(uuid.uuid4()),
