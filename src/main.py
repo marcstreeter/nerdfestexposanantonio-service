@@ -1,3 +1,4 @@
+import json
 import os
 import uuid
 
@@ -21,14 +22,12 @@ def lambda_handler(event, context):
     try:
         return {
             'statusCode': 200,
-            'error': None,
-            'body': rsvp(entry=entry)
+            'body': json.dumps(rsvp(entry=entry))
         }
     except Exception as e:
         return {
             'statusCode': 500,
-            'error': str(e),
-            'body': None
+            'body': json.dumps(str(e))
         }
 
 
@@ -80,7 +79,7 @@ def rsvp(entry):
 #   AWS_LAMBDA_LOG_STREAM_NAME = <...>
 #   AWS_REGION = 'us-west-2'
 #   PWD = '/var/task'
-#   _HANDLER = 'src.main.lambda_handler'
+#   _HANDLER = 'main.lambda_handler'
 #   SUPABASE_URL = <...>
 #   TZ = ':UTC'
 #   LAMBDA_TASK_ROOT = '/var/task'
