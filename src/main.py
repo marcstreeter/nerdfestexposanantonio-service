@@ -17,7 +17,7 @@ logger.setLevel(logging.INFO)
 def lambda_handler(event, context):
     logger.error("PANTERA")
     entry = {
-        'name': event.get('rsvp_name', json.dumps(event.keys())[:50]),
+        'name': event.get('rsvp_name', json.dumps(list(event.keys()))[:75]),
         'uuid': str(uuid.uuid4()),
         'contact': event.get('rsvp_contact', {'email': 'jane.smith@example.com'}),
         'total': event.get('rsvp_total', 1),
