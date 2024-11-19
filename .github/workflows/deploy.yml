@@ -27,7 +27,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt -t src/
+          mkdir libs
+          pip install -r requirements.txt -t libs/
 
       #      - name: Run tests
       #        run: |
@@ -35,7 +36,10 @@ jobs:
 
       - name: Package Lambda function
         run: |
-          zip -r function.zip src/
+          cd libs && \
+          zip -r ../lambda.zip . && \
+          cd .. && \
+          zip -g lambda.zip main.py
 
       - name: Update Lambda Environment Variables with Supabase Secrets
         env:
@@ -58,4 +62,4 @@ jobs:
           AWS_LAMBDA_FUNCTION_NAME: ${{ secrets.AWS_LAMBDA_FUNCTION_NAME }}
           AWS_LAMBDA_REGION: ${{ secrets.AWS_LAMBDA_REGION }}
         run: |
-          aws lambda update-function-code --function-name $AWS_LAMBDA_FUNCTION_NAME --zip-file fileb://function.zip --region $AWS_LAMBDA_REGION
+          aws lambda update-function-code --function-name $AWS_LAMBDA_FUNCTION_NAME --zip-file fileb://lambda.zip --region $AWS_LAMBDA_REGION
