@@ -1,4 +1,4 @@
-### THIS WORKS WITH PYCHARM
+### LOCAL PYCHARM CALLS
 ### Send Valid Request
 POST http://localhost:18080/2015-03-31/functions/function/invocations
 Content-Type: application/json
@@ -15,4 +15,23 @@ Content-Type: application/json
 {
   "rsvp_total": 20,
   "rsvp_name": "From PyCharm With Love"
+}
+
+### PROD PYCHARM CALLS
+### Send Valid Request
+POST https://bivqb6ix45.execute-api.us-west-2.amazonaws.com/nerdfest-satx-rsvp
+Content-Type: application/json
+
+{
+  "rsvp_total": 2,
+  "rsvp_name": "I will succeed."
+}
+
+### Send Invalid Request
+POST https://bivqb6ix45.execute-api.us-west-2.amazonaws.com/nerdfest-satx-rsvp
+Content-Type: application/json
+
+{
+  "rsvp_total": 20,
+  "rsvp_name": "I will fail."
 }
