@@ -1,12 +1,8 @@
-import json
-import logging
 import os
 import uuid
 
 from supabase.client import Client, create_client
 
-
-logger = logging.getLogger(__name__)
 
 def lambda_handler(event, context):
     entry = {
@@ -22,10 +18,18 @@ def lambda_handler(event, context):
             "cookie": "somestoreduuid"
         })
     }
-    return {
-        'statusCode': 200,
-        'body': json.dumps(rsvp(entry=entry))
-    }
+    try:
+        return {
+            'statusCode': 200,
+            'error': None,
+            'body': rsvp(entry=entry)
+        }
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'error': str(e),
+            'body': None
+        }
 
 
 def rsvp(entry):
@@ -36,13 +40,8 @@ def rsvp(entry):
         raise ValueError("Supabase URL and Key must be set as environment variables.")
 
     client: Client = create_client(supabase_url, supabase_key)
-    try:
-        response = client.table("rsvp").insert(entry).execute()
-    except Exception as e:
-        logger.error("erroring!!")
-        logger.error(type(e))
-        return {"data": None, "error": str(e)}
-    return {"data": response.data, "error": None}
+    response = client.table("rsvp").insert(entry).execute()
+    return {"data": response.data}
 
 # SUPABASE INSERT QUERY
 # CREATE TABLE public.rsvp (
