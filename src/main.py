@@ -1,3 +1,4 @@
+import base64
 import json
 import os
 import sys
@@ -38,7 +39,8 @@ def lambda_handler(event, context):
 
 def parse_entry(event):
     if event.get('body'):  # lambda
-        evt = json.loads(event.get('body'))
+        content = decode_base64(event.get('body')) if event.get('isBase64Encoded', False) else event.get('body')
+        evt = json.loads(content)
     else:  # container
         evt = event
 
@@ -58,6 +60,10 @@ def parse_entry(event):
             'cookie': 'somestoreduuid'
         })
     }
+
+
+def decode_base64(content):
+    return base64.b64decode(content).decode('utf-8')
 
 
 def rsvp(entry):
