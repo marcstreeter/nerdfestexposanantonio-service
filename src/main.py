@@ -16,18 +16,37 @@ logger.setLevel(logging.INFO)
 
 
 def lambda_handler(event, context):
-    if event.get('body'):  # lambda
-        evt = json.loads(event.get('body'))
-    elif event.get('rsvp_name'):  # container
-        evt = event
-    else:
-        logger.error(f"invalid {event=}")
+    try:
+        entry = parse_entry(event)
+    except Exception as e:
+        logger.error(f"failed to parse {event=} because {e}")
         return {
             'statusCode': 400,
             'body': json.dumps({"error": "failed to load event"})
         }
-    entry = {
-        'name': evt.get('rsvp_name', json.dumps(list(event.keys()))[:75]),
+    try:
+        return {
+            'statusCode': 200,
+            'body': json.dumps(rsvp(entry=entry))
+        }
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps(str(e))
+        }
+
+
+def parse_entry(event):
+    if event.get('body'):  # lambda
+        evt = json.loads(event.get('body'))
+    else:  # container
+        evt = event
+
+    if "rsvp_name" not in evt:
+        raise Exception('object missing required keys')
+
+    return {
+        'name': evt.get('rsvp_name', 'test name'),
         'uuid': str(uuid.uuid4()),
         'contact': evt.get('rsvp_contact', {'email': 'jane.smith@example.com'}),
         'total': evt.get('rsvp_total', 1),
@@ -39,16 +58,6 @@ def lambda_handler(event, context):
             'cookie': 'somestoreduuid'
         })
     }
-    try:
-        return {
-            'statusCode': 200,
-            'body': json.dumps(rsvp(entry=entry))
-        }
-    except Exception as e:
-        return {
-            'statusCode': 500,
-            'body': json.dumps(str(e))
-        }
 
 
 def rsvp(entry):
