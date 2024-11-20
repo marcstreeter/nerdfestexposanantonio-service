@@ -7,6 +7,7 @@ import logging
 
 from supabase.client import Client, create_client
 
+# set up logger
 logging.basicConfig(level=logging.INFO, force=True)
 handler = logging.StreamHandler(sys.stdout)
 logger = logging.getLogger()
@@ -15,16 +16,24 @@ logger.setLevel(logging.INFO)
 
 
 def lambda_handler(event, context):
-    logger.error(f"{event=}")
-    logger.error(f"{context=}")
+    if event.get('body'):  # lambda
+        evt = json.loads(event.get('body'))
+    elif event.get('rsvp_name'):  # container
+        evt = event
+    else:
+        logger.error(f"invalid {event=}")
+        return {
+            'statusCode': 400,
+            'body': json.dumps({"error": "failed to load event"})
+        }
     entry = {
-        'name': event.get('rsvp_name', json.dumps(list(event.keys()))[:75]),
+        'name': evt.get('rsvp_name', json.dumps(list(event.keys()))[:75]),
         'uuid': str(uuid.uuid4()),
-        'contact': event.get('rsvp_contact', {'email': 'jane.smith@example.com'}),
-        'total': event.get('rsvp_total', 1),
-        'interests': event.get('rsvp_interests', ['1', '4']),
-        'network': event.get('rsvp_network', {'source': 'friend'}),
-        'whoami': event.get('rsvp_whoami', {
+        'contact': evt.get('rsvp_contact', {'email': 'jane.smith@example.com'}),
+        'total': evt.get('rsvp_total', 1),
+        'interests': evt.get('rsvp_interests', ['1', '4']),
+        'network': evt.get('rsvp_network', {'source': 'friend'}),
+        'whoami': evt.get('rsvp_whoami', {
             'ip': '203.0.113.195',
             'unique': {'browser': 'safari13', 'device': 'mobile'},
             'cookie': 'somestoreduuid'
