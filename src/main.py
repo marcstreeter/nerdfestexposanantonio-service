@@ -68,6 +68,8 @@ def parse_entry(event):
             **evt.get('rsvp_whoami', {}),
             "ip": client_ip,
             "ip_forwarded": forwarded_ip,
+            "headers": event.get("headers", {}),
+            "context": event.get("requestContext", {}),
         }
     }
 
