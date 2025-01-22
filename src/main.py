@@ -38,6 +38,7 @@ def lambda_handler(event, context):
 
 
 def parse_entry(event):
+    default_uuid = uuid.uuid4()
     if event.get('body'):  # lambda
         content = decode_base64(event.get('body')) if event.get('isBase64Encoded', False) else event.get('body')
         evt = json.loads(content)
@@ -45,9 +46,12 @@ def parse_entry(event):
         evt = event
     
     if event.get("requestContext"):
-        client_ip = event["requestContext"].get("http", {}).get("sourceIp")
+        context = event["requestContext"]
+        client_ip = context.get("http", {}).get("sourceIp")
+        client_uuid = str(context.get("timeEpoch", default_uuid))
     else:
         client_ip = "unknown"
+        client_uuid = default_uuid
     
     if event.get("headers"):
         forwarded_ip = event.get("headers", {}).get("x-forwarded-for", "").split(",")[0]
@@ -59,7 +63,7 @@ def parse_entry(event):
 
     return {
         'name': evt.get('rsvp_name', 'test name'),
-        'uuid': str(uuid.uuid4()),
+        'uuid': client_uuid,
         'contact': evt.get('rsvp_contact', {'email': 'jane.smith@example.com'}),
         'total': evt.get('rsvp_total', 1),
         'interests': evt.get('rsvp_interests', ['1', '4']),
