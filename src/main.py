@@ -48,7 +48,12 @@ def parse_entry(event):
         client_ip = event["requestContext"].get("http", {}).get("sourceIp")
     else:
         client_ip = "unknown"
-
+    
+    if event.get("headers"):
+        forwarded_ip = event.get("headers", {}).get("X-Forwarded-For", "").split(",")[0]
+    else:
+        forwarded_ip = "unknown"
+    
     if "rsvp_name" not in evt:
         raise Exception('object missing required keys')
 
@@ -59,7 +64,11 @@ def parse_entry(event):
         'total': evt.get('rsvp_total', 1),
         'interests': evt.get('rsvp_interests', ['1', '4']),
         'network': evt.get('rsvp_network', {'source': 'friend'}),
-        'whoami': {**evt.get('rsvp_whoami', {}), "ip": client_ip}
+        'whoami': {
+            **evt.get('rsvp_whoami', {}),
+            "ip": client_ip,
+            "ip_forwarded": forwarded_ip,
+        }
     }
 
 
