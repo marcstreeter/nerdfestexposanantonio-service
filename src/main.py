@@ -50,7 +50,7 @@ def parse_entry(event):
         client_ip = "unknown"
     
     if event.get("headers"):
-        forwarded_ip = event.get("headers", {}).get("X-Forwarded-For", "").split(",")[0]
+        forwarded_ip = event.get("headers", {}).get("x-forwarded-for", "").split(",")[0]
     else:
         forwarded_ip = "unknown"
     
@@ -68,8 +68,6 @@ def parse_entry(event):
             **evt.get('rsvp_whoami', {}),
             "ip": client_ip,
             "ip_forwarded": forwarded_ip,
-            "headers": event.get("headers", {}),
-            "context": event.get("requestContext", {}),
         }
     }
 
