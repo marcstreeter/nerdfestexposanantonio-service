@@ -15,15 +15,17 @@ The following environment is expected:
 
 - AWS Account with:
   - Lambda function created (name used in Github Repository secrets)
-- Supabase account with schema created as is shown in `main.py`
-- Github Actions Permissions must be enabled (e.g "Allow all actions and reusable workflows")
-- Github has Repository secrets set on the following
-  - AWS_ACCESS_KEY_ID
-  - AWS_SECRET_ACCESS_KEY
-  - AWS_LAMBDA_FUNCTION_NAME // ex: nerdfestexpo-sanantonio-rsvp, should match the name of the lambda created earlier
-  - AWS_LAMBDA_REGION // ex: us-west-2
-  - SUPABASE_KEY // ex: eySuperL0ngKeY4U.Ev2nL0Ng3rSTuFF.Ok_that1z@ll
-  - SUPABASE_URL // ex: https://yxeboogwqtadffzmiozm.supabase.co
+- Supabase account with:
+  - schema created as is shown in [README.db.md](README.db.md)
+- Github:
+  - Actions Permissions must be enabled (e.g "Allow all actions and reusable workflows")
+  - Repository secrets set on the following:
+    - AWS_ACCESS_KEY_ID
+    - AWS_SECRET_ACCESS_KEY
+    - AWS_LAMBDA_FUNCTION_NAME // ex: nerdfestexpo-sanantonio-rsvp, should match the name of the lambda created earlier
+    - AWS_LAMBDA_REGION // ex: us-west-2
+    - SUPABASE_KEY // ex: eySuperL0ngKeY4U.Ev2nL0Ng3rSTuFF.Ok_that1z@ll
+    - SUPABASE_URL // ex: https://yxeboogwqtadffzmiozm.supabase.co
 
 ## testing
 
